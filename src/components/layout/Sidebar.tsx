@@ -7,7 +7,9 @@ import {
   Settings, 
   BarChart3,
   LogOut,
-  User
+  User,
+  Building,
+  ClipboardList
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -25,7 +27,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) =
     { id: 'documents', label: 'Dokumenty', icon: FileText },
     { id: 'review', label: 'Fronta kontrol', icon: Users },
     { id: 'analytics', label: 'Analytika', icon: BarChart3 },
-    { id: 'admin', label: 'Správa', icon: Settings }
+    { id: 'admin', label: 'Správa', icon: Settings },
+    { id: 'buildings', label: 'Bytové domy', icon: Building },
+    { id: 'revision-types', label: 'Typy revizí', icon: ClipboardList }
   ];
 
   const handleSignOut = async () => {

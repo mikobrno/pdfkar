@@ -6,6 +6,46 @@ export interface User {
   created_at: string;
 }
 
+export interface ApartmentBuilding {
+  id: string;
+  name: string;
+  address: string;
+  created_at: string;
+  user_id: string;
+}
+
+export interface RevisionType {
+  id: string;
+  name: string;
+  extraction_rules: {
+    revision_date?: string;
+    next_revision_date?: string;
+    defects?: string;
+    [key: string]: string | undefined;
+  };
+  file_naming_format: string;
+  created_at: string;
+  user_id: string;
+}
+
+export interface ExtractedDefect {
+  id: string;
+  document_id: string;
+  defect_type: string;
+  description: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  location: string;
+  bounding_box: {
+    page: number;
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  };
+  confidence_score: number;
+  created_at: string;
+}
+
 export interface Document {
   id: string;
   filename: string;
@@ -13,6 +53,8 @@ export interface Document {
   document_type: string | null;
   status: 'queued' | 'processing' | 'awaiting_review' | 'completed' | 'failed';
   uploaded_by: string;
+  building_id?: string;
+  revision_type_id?: string;
   created_at: string;
   updated_at: string;
   processed_at?: string;

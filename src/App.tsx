@@ -12,6 +12,8 @@ import { StatsCards } from './components/dashboard/StatsCards';
 import { ReviewInterface } from './components/review/ReviewInterface';
 import { PromptManager } from './components/admin/PromptManager';
 import { AnalyticsDashboard } from './components/analytics/AnalyticsDashboard';
+import { ApartmentBuildingManager } from './components/admin/ApartmentBuildingManager';
+import { RevisionTypeManager } from './components/admin/RevisionTypeManager';
 import { Document, ExtractedData } from './types';
 import { db } from './lib/supabase';
 
@@ -191,6 +193,30 @@ function AppContent() {
                 </p>
               </div>
               <PromptManager />
+            </div>
+          )}
+
+          {currentView === 'buildings' && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Správa bytových domů</h1>
+                <p className="text-gray-600">
+                  Spravujte seznam bytových domů pro které provádíte revize.
+                </p>
+              </div>
+              <ApartmentBuildingManager />
+            </div>
+          )}
+
+          {currentView === 'revision-types' && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Správa typů revizí</h1>
+                <p className="text-gray-600">
+                  Definujte typy revizí a pravidla pro extrakci dat z dokumentů.
+                </p>
+              </div>
+              <RevisionTypeManager />
             </div>
           )}
         </div>

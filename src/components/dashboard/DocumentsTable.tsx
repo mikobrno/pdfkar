@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
+import { useQuery } from '@tanstack/react-query';
+import { db } from '../../lib/supabase';
+import { ApartmentBuilding, RevisionType } from '../../types';
 import { 
   FileText, 
   Search, 
@@ -10,7 +13,10 @@ import {
   AlertCircle, 
   Loader2,
   Calendar,
-  Tag
+  Tag,
+  Building,
+  ClipboardList,
+  AlertTriangle
 } from 'lucide-react';
 import { Document } from '../../types';
 
@@ -26,13 +32,35 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [buildingFilter, setBuildingFilter] = useState<string>('all');
+
+  // Fetch apartment buildings for filter
+  const { data: buildings = [] } = useQuery({
+    queryKey: ['apartment-buildings'],
+    queryFn: async () => {
+      const { data, error } = await db.getApartmentBuildings();
+      if (error) throw error;
+      return data as ApartmentBuilding[];
+    }
+  });
+
+  // Fetch revision types for filter
+  const { data: revisionTypes = [] } = useQuery({
+    queryKey: ['revision-types'],
+    queryFn: async () => {
+      const { data, error } = await db.getRevisionTypes();
+      if (error) throw error;
+      return data as RevisionType[];
+    }
+  });
 
   const filteredDocuments = documents.filter(doc => {
     const matchesSearch = doc.filename.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || doc.status === statusFilter;
     const matchesType = typeFilter === 'all' || doc.document_type === typeFilter;
+    const matchesBuilding = buildingFilter === 'all' || doc.building_id === buildingFilter;
     
-    return matchesSearch && matchesStatus && matchesType;
+    return matchesSearch && matchesStatus && matchesType && matchesBuilding;
   });
 
   const getStatusIcon = (status: Document['status']) => {
@@ -88,6 +116,18 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
 
   const uniqueTypes = Array.from(new Set(documents.map(d => d.document_type).filter(Boolean)));
 
+  const getBuildingName = (buildingId?: string) => {
+    if (!buildingId) return null;
+    const building = buildings.find(b => b.id === buildingId);
+    return building?.name || 'Neznámý dům';
+  };
+
+  const getRevisionTypeName = (revisionTypeId?: string) => {
+    if (!revisionTypeId) return null;
+    const revisionType = revisionTypes.find(rt => rt.id === revisionTypeId);
+    return revisionType?.name || 'Neznámý typ';
+  };
+
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
       {/* Header with filters */}
@@ -135,6 +175,20 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                 ))}
               </select>
             )}
+
+            {/* Building Filter */}
+            {buildings.length > 0 && (
+              <select
+                value={buildingFilter}
+                onChange={(e) => setBuildingFilter(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              >
+                <option value="all">Všechny domy</option>
+                {buildings.map(building => (
+                  <option key={building.id} value={building.id}>{building.name}</option>
+                ))}
+              </select>
+            )}
           </div>
         </div>
       </div>
@@ -148,7 +202,10 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                 Dokument
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Typ
+                Bytový dům
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Typ revize
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Stav
@@ -178,10 +235,20 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {document.document_type ? (
+                  {getBuildingName(document.building_id) ? (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      <Building className="w-3 h-3 mr-1" />
+                      {getBuildingName(document.building_id)}
+                    </span>
+                  ) : (
+                    <span className="text-sm text-gray-500">-</span>
+                  )}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {getRevisionTypeName(document.revision_type_id) ? (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
-                      <Tag className="w-3 h-3 mr-1" />
-                      {document.document_type}
+                      <ClipboardList className="w-3 h-3 mr-1" />
+                      {getRevisionTypeName(document.revision_type_id)}
                     </span>
                   ) : (
                     <span className="text-sm text-gray-500">-</span>

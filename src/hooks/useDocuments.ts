@@ -16,7 +16,8 @@ export const useDocuments = (userId?: string) => {
   });
 
   const uploadMutation = useMutation({
-    mutationFn: async (files: File[]) => {
+    mutationFn: async (data: { files: File[]; metadata?: { building_id?: string; revision_type_id?: string } }) => {
+      const { files, metadata } = data;
       const results = [];
       
       for (const file of files) {
@@ -30,7 +31,9 @@ export const useDocuments = (userId?: string) => {
             file_path: filePath,
             status: 'queued',
             uploaded_by: userId,
-            file_size: file.size
+            file_size: file.size,
+            building_id: metadata?.building_id,
+            revision_type_id: metadata?.revision_type_id
           });
 
           if (error) throw error;
@@ -41,7 +44,9 @@ export const useDocuments = (userId?: string) => {
             job_type: 'document_processing',
             payload: {
               file_path: filePath,
-              filename: file.name
+              filename: file.name,
+              building_id: metadata?.building_id,
+              revision_type_id: metadata?.revision_type_id
             },
             status: 'pending',
             max_attempts: 3
@@ -70,7 +75,8 @@ export const useDocuments = (userId?: string) => {
     documents: documentsQuery.data || [],
     isLoading: documentsQuery.isLoading,
     error: documentsQuery.error,
-    uploadDocuments: uploadMutation.mutate,
+    uploadDocuments: (files: File[], metadata?: { building_id?: string; revision_type_id?: string }) => 
+      uploadMutation.mutate({ files, metadata }),
     isUploading: uploadMutation.isPending
   };
 };

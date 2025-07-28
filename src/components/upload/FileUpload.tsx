@@ -3,6 +3,9 @@ import { useDropzone } from 'react-dropzone';
 import { Upload, FileText, X, CheckCircle, AlertCircle } from 'lucide-react';
 import { useDocuments } from '../../hooks/useDocuments';
 import { useAuth } from '../../hooks/useAuth';
+import { useQuery } from '@tanstack/react-query';
+import { db } from '../../lib/supabase';
+import { ApartmentBuilding, RevisionType } from '../../types';
 
 interface UploadedFile extends File {
   id: string;
@@ -15,6 +18,28 @@ export const FileUpload: React.FC = () => {
   const { user } = useAuth();
   const { uploadDocuments, isUploading } = useDocuments(user?.id);
   const [files, setFiles] = React.useState<UploadedFile[]>([]);
+  const [selectedBuilding, setSelectedBuilding] = React.useState<string>('');
+  const [selectedRevisionType, setSelectedRevisionType] = React.useState<string>('');
+
+  // Fetch apartment buildings
+  const { data: buildings = [] } = useQuery({
+    queryKey: ['apartment-buildings', user?.id],
+    queryFn: async () => {
+      const { data, error } = await db.getApartmentBuildings(user?.id);
+      if (error) throw error;
+      return data as ApartmentBuilding[];
+    }
+  });
+
+  // Fetch revision types
+  const { data: revisionTypes = [] } = useQuery({
+    queryKey: ['revision-types', user?.id],
+    queryFn: async () => {
+      const { data, error } = await db.getRevisionTypes(user?.id);
+      if (error) throw error;
+      return data as RevisionType[];
+    }
+  });
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const newFiles: UploadedFile[] = acceptedFiles.map(file => ({
@@ -47,8 +72,11 @@ export const FileUpload: React.FC = () => {
     });
 
     // Actually upload the files
-    uploadDocuments(acceptedFiles);
-  }, [uploadDocuments]);
+    uploadDocuments(acceptedFiles, {
+      building_id: selectedBuilding || undefined,
+      revision_type_id: selectedRevisionType || undefined
+    });
+  }, [uploadDocuments, selectedBuilding, selectedRevisionType]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -69,6 +97,58 @@ export const FileUpload: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Selection Form */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Nastavení dokumentu</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Vyberte bytový dům
+            </label>
+            <select
+              value={selectedBuilding}
+              onChange={(e) => setSelectedBuilding(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            >
+              <option value="">-- Vyberte bytový dům --</option>
+              {buildings.map((building) => (
+                <option key={building.id} value={building.id}>
+                  {building.name}
+                </option>
+              ))}
+            </select>
+            {buildings.length === 0 && (
+              <p className="text-sm text-gray-500 mt-1">
+                Nejprve přidejte bytové domy v sekci Správa
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Vyberte typ revize
+            </label>
+            <select
+              value={selectedRevisionType}
+              onChange={(e) => setSelectedRevisionType(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            >
+              <option value="">-- Vyberte typ revize --</option>
+              {revisionTypes.map((type) => (
+                <option key={type.id} value={type.id}>
+                  {type.name}
+                </option>
+              ))}
+            </select>
+            {revisionTypes.length === 0 && (
+              <p className="text-sm text-gray-500 mt-1">
+                Nejprve přidejte typy revizí v sekci Správa
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* Upload Area */}
       <div
         {...getRootProps()}

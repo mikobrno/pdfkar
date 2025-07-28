@@ -3,7 +3,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Save, CheckCircle, AlertCircle, Eye } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import { Document, ExtractedData } from '../../types';
+import { ApartmentBuilding, RevisionType } from '../../types';
 import { PDFViewer } from '../pdf/PDFViewer';
 import { db, getFileUrl } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
@@ -34,6 +36,37 @@ export const ReviewInterface: React.FC<ReviewInterfaceProps> = ({
   const { user } = useAuth();
   const [selectedField, setSelectedField] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+
+  // Fetch building and revision type details
+  const { data: building } = useQuery({
+    queryKey: ['apartment-building', document.building_id],
+    queryFn: async () => {
+      if (!document.building_id) return null;
+      const { data, error } = await db.supabase
+        .from('apartment_buildings')
+        .select('*')
+        .eq('id', document.building_id)
+        .single();
+      if (error) throw error;
+      return data as ApartmentBuilding;
+    },
+    enabled: !!document.building_id
+  });
+
+  const { data: revisionType } = useQuery({
+    queryKey: ['revision-type', document.revision_type_id],
+    queryFn: async () => {
+      if (!document.revision_type_id) return null;
+      const { data, error } = await db.supabase
+        .from('revision_types')
+        .select('*')
+        .eq('id', document.revision_type_id)
+        .single();
+      if (error) throw error;
+      return data as RevisionType;
+    },
+    enabled: !!document.revision_type_id
+  });
   
   const validationSchema = createValidationSchema(extractedData);
   type FormData = z.infer<typeof validationSchema>;
@@ -125,6 +158,16 @@ export const ReviewInterface: React.FC<ReviewInterfaceProps> = ({
 
   const fileUrl = getFileUrl(document.file_path);
 
+  // Separate defects from other extracted data
+  const defects = extractedData.filter(data => 
+    data.field_name.toLowerCase().includes('defect') || 
+    data.field_name.toLowerCase().includes('závada')
+  );
+  const otherData = extractedData.filter(data => 
+    !data.field_name.toLowerCase().includes('defect') && 
+    !data.field_name.toLowerCase().includes('závada')
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-6">
@@ -135,9 +178,21 @@ export const ReviewInterface: React.FC<ReviewInterfaceProps> = ({
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
                 Kontrola dokumentu
               </h1>
-              <p className="text-gray-600">
-                {document.filename} • {document.document_type || 'Unknown Type'}
-              </p>
+              <div className="space-y-2">
+                <p className="text-gray-600">
+                  {document.filename}
+                </p>
+                {building && (
+                  <p className="text-sm text-gray-500">
+                    <span className="font-medium">Bytový dům:</span> {building.name}
+                  </p>
+                )}
+                {revisionType && (
+                  <p className="text-sm text-gray-500">
+                    <span className="font-medium">Typ revize:</span> {revisionType.name}
+                  </p>
+                )}
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
@@ -172,7 +227,7 @@ export const ReviewInterface: React.FC<ReviewInterfaceProps> = ({
               </h2>
               
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                {extractedData.map((field) => (
+                {otherData.map((field) => (
                   <div key={field.id} className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">
                       {field.field_name}
@@ -215,6 +270,45 @@ export const ReviewInterface: React.FC<ReviewInterfaceProps> = ({
                   </div>
                 ))}
 
+                {/* Defects Section */}
+                {defects.length > 0 && (
+                  <div className="border-t border-gray-200 pt-6">
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">
+                      Nalezené závady
+                    </h3>
+                    <div className="space-y-4">
+                      {defects.map((defect) => (
+                        <div key={defect.id} className="bg-red-50 border border-red-200 rounded-lg p-4">
+                          <div className="flex items-start space-x-3">
+                            <AlertCircle className="w-5 h-5 text-red-500 mt-0.5" />
+                            <div className="flex-1">
+                              <label className="block text-sm font-medium text-red-800 mb-1">
+                                {defect.field_name}
+                                <span className="ml-2 text-xs text-red-600">
+                                  (Spolehlivost: {Math.round(defect.confidence_score * 100)}%)
+                                </span>
+                              </label>
+                              <textarea
+                                {...register(defect.field_name)}
+                                onFocus={() => handleFieldFocus(defect.field_name)}
+                                rows={3}
+                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors bg-white ${
+                                  selectedField === defect.field_name ? 'ring-2 ring-red-500' : ''
+                                }`}
+                              />
+                              {watchedValues[defect.field_name] !== defect.field_value && (
+                                <p className="text-sm text-blue-600 mt-1">
+                                  Původní: "{defect.field_value}"
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="pt-6 border-t border-gray-200">
                   <div className="flex items-center justify-between">
                     <div className="text-sm text-gray-600">
@@ -255,6 +349,7 @@ export const ReviewInterface: React.FC<ReviewInterfaceProps> = ({
               <ul className="text-sm text-blue-800 space-y-1">
                 <li>• Klikněte na zvýrazněné oblasti v PDF pro zaměření na odpovídající pole</li>
                 <li>• Pole s nízkou spolehlivostí (žluté/červené pozadí) potřebují zvláštní pozornost</li>
+                <li>• Věnujte zvláštní pozornost sekci závad - tyto informace jsou kritické</li>
                 <li>• Ověřte všechna extrahovaná data proti původnímu dokumentu</li>
                 <li>• Proveďte opravy podle potřeby před dokončením kontroly</li>
               </ul>

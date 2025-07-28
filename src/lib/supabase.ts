@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { ApartmentBuilding, RevisionType } from '../types';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-project.supabase.co';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key';
@@ -41,6 +42,88 @@ export const db = {
       .insert(document)
       .select()
       .single();
+  },
+
+  // Apartment Buildings CRUD
+  async getApartmentBuildings(userId?: string) {
+    let query = supabase
+      .from('apartment_buildings')
+      .select('*')
+      .order('name');
+    
+    if (userId) {
+      query = query.eq('user_id', userId);
+    }
+    
+    return query;
+  },
+
+  async createApartmentBuilding(building: Omit<ApartmentBuilding, 'id' | 'created_at'>) {
+    return supabase
+      .from('apartment_buildings')
+      .insert({
+        ...building,
+        created_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+  },
+
+  async updateApartmentBuilding(id: string, updates: Partial<ApartmentBuilding>) {
+    return supabase
+      .from('apartment_buildings')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+  },
+
+  async deleteApartmentBuilding(id: string) {
+    return supabase
+      .from('apartment_buildings')
+      .delete()
+      .eq('id', id);
+  },
+
+  // Revision Types CRUD
+  async getRevisionTypes(userId?: string) {
+    let query = supabase
+      .from('revision_types')
+      .select('*')
+      .order('name');
+    
+    if (userId) {
+      query = query.eq('user_id', userId);
+    }
+    
+    return query;
+  },
+
+  async createRevisionType(revisionType: Omit<RevisionType, 'id' | 'created_at'>) {
+    return supabase
+      .from('revision_types')
+      .insert({
+        ...revisionType,
+        created_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+  },
+
+  async updateRevisionType(id: string, updates: Partial<RevisionType>) {
+    return supabase
+      .from('revision_types')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+  },
+
+  async deleteRevisionType(id: string) {
+    return supabase
+      .from('revision_types')
+      .delete()
+      .eq('id', id);
   },
 
   async updateDocumentStatus(id: string, status: Document['status'], metadata?: Record<string, any>) {

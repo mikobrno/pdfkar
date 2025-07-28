@@ -81,14 +81,14 @@ export const FileUpload: React.FC = () => {
         <input {...getInputProps()} />
         <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
         <h3 className="text-lg font-semibold text-gray-900 mb-2">
-          {isDragActive ? 'Drop files here' : 'Upload PDF Documents'}
+          {isDragActive ? 'Přetáhněte soubory sem' : 'Nahrát PDF dokumenty'}
         </h3>
         <p className="text-gray-600 mb-4">
-          Drag and drop your PDF files here, or click to browse
+          Přetáhněte vaše PDF soubory sem, nebo klikněte pro procházení
         </p>
         <div className="text-sm text-gray-500">
-          <p>Supported format: PDF</p>
-          <p>Maximum file size: 20MB</p>
+          <p>Podporovaný formát: PDF</p>
+          <p>Maximální velikost souboru: 20MB</p>
         </div>
       </div>
 
@@ -96,13 +96,13 @@ export const FileUpload: React.FC = () => {
       {files.length > 0 && (
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-            <h4 className="font-semibold text-gray-900">Upload Progress</h4>
+            <h4 className="font-semibold text-gray-900">Průběh nahrávání</h4>
             {files.some(f => f.status === 'success') && (
               <button
                 onClick={clearCompleted}
                 className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
               >
-                Clear Completed
+                Vymazat dokončené
               </button>
             )}
           </div>
@@ -126,7 +126,7 @@ export const FileUpload: React.FC = () => {
                         />
                       </div>
                       <p className="text-xs text-gray-500 mt-1">
-                        {file.progress}% uploaded
+                        {file.progress}% nahráno
                       </p>
                     </div>
                   )}

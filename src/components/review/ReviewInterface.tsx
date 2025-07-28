@@ -133,7 +133,7 @@ export const ReviewInterface: React.FC<ReviewInterfaceProps> = ({
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                Review Document
+                Kontrola dokumentu
               </h1>
               <p className="text-gray-600">
                 {document.filename} • {document.document_type || 'Unknown Type'}
@@ -142,7 +142,7 @@ export const ReviewInterface: React.FC<ReviewInterfaceProps> = ({
             <div className="flex items-center space-x-4">
               <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
                 <AlertCircle className="w-4 h-4 mr-1" />
-                Awaiting Review
+                Čeká na kontrolu
               </span>
             </div>
           </div>
@@ -168,7 +168,7 @@ export const ReviewInterface: React.FC<ReviewInterfaceProps> = ({
           <div className="space-y-4">
             <div className="bg-white rounded-xl border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Extracted Data Review
+                Kontrola extrahovaných dat
               </h2>
               
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -177,7 +177,7 @@ export const ReviewInterface: React.FC<ReviewInterfaceProps> = ({
                     <label className="block text-sm font-medium text-gray-700">
                       {field.field_name}
                       <span className="ml-2 text-xs text-gray-500">
-                        (Confidence: {Math.round(field.confidence_score * 100)}%)
+                        (Spolehlivost: {Math.round(field.confidence_score * 100)}%)
                       </span>
                     </label>
                     
@@ -196,7 +196,7 @@ export const ReviewInterface: React.FC<ReviewInterfaceProps> = ({
                       
                       {field.confidence_score < 0.8 && (
                         <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                          <AlertCircle className="w-4 h-4 text-yellow-500" title="Low confidence - please verify" />
+                          <AlertCircle className="w-4 h-4 text-yellow-500" title="Nízká spolehlivost - prosím ověřte" />
                         </div>
                       )}
                     </div>
@@ -209,7 +209,7 @@ export const ReviewInterface: React.FC<ReviewInterfaceProps> = ({
                     
                     {watchedValues[field.field_name] !== field.field_value && (
                       <p className="text-sm text-blue-600">
-                        Original: "{field.field_value}"
+                        Původní: "{field.field_value}"
                       </p>
                     )}
                   </div>
@@ -219,9 +219,9 @@ export const ReviewInterface: React.FC<ReviewInterfaceProps> = ({
                   <div className="flex items-center justify-between">
                     <div className="text-sm text-gray-600">
                       {isDirty ? (
-                        <span className="text-orange-600">You have unsaved changes</span>
+                        <span className="text-orange-600">Máte neuložené změny</span>
                       ) : (
-                        <span className="text-green-600">All changes saved</span>
+                        <span className="text-green-600">Všechny změny uloženy</span>
                       )}
                     </div>
                     
@@ -233,12 +233,12 @@ export const ReviewInterface: React.FC<ReviewInterfaceProps> = ({
                       {saving ? (
                         <>
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          Saving...
+                          Ukládá se...
                         </>
                       ) : (
                         <>
                           <CheckCircle className="w-4 h-4 mr-2" />
-                          Complete Review
+                          Dokončit kontrolu
                         </>
                       )}
                     </button>
@@ -250,13 +250,13 @@ export const ReviewInterface: React.FC<ReviewInterfaceProps> = ({
             {/* Instructions */}
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
               <h3 className="text-sm font-medium text-blue-900 mb-2">
-                Review Instructions
+                Pokyny pro kontrolu
               </h3>
               <ul className="text-sm text-blue-800 space-y-1">
-                <li>• Click on highlighted areas in the PDF to focus on corresponding fields</li>
-                <li>• Fields with low confidence (yellow/red background) need extra attention</li>
-                <li>• Verify all extracted data against the original document</li>
-                <li>• Make corrections as needed before completing the review</li>
+                <li>• Klikněte na zvýrazněné oblasti v PDF pro zaměření na odpovídající pole</li>
+                <li>• Pole s nízkou spolehlivostí (žluté/červené pozadí) potřebují zvláštní pozornost</li>
+                <li>• Ověřte všechna extrahovaná data proti původnímu dokumentu</li>
+                <li>• Proveďte opravy podle potřeby před dokončením kontroly</li>
               </ul>
             </div>
           </div>

@@ -174,13 +174,13 @@ export const PromptManager: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Prompt Management</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Správa promptů</h1>
         <button
           onClick={() => setIsCreating(true)}
           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
         >
           <Plus className="w-4 h-4 mr-2" />
-          New Prompt
+          Nový prompt
         </button>
       </div>
 
@@ -188,7 +188,7 @@ export const PromptManager: React.FC = () => {
         {/* Prompt Groups List */}
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-            <h2 className="font-semibold text-gray-900">Prompt Library</h2>
+            <h2 className="font-semibold text-gray-900">Knihovna promptů</h2>
           </div>
           <div className="divide-y divide-gray-200">
             {promptGroups.map((group) => (
@@ -203,7 +203,7 @@ export const PromptManager: React.FC = () => {
                   <div>
                     <h3 className="font-medium text-gray-900">{group.prompt_name}</h3>
                     <p className="text-sm text-gray-500">
-                      {group.versions.length} version{group.versions.length !== 1 ? 's' : ''}
+                      {group.versions.length} verz{group.versions.length === 1 ? 'e' : group.versions.length < 5 ? 'e' : 'í'}
                     </p>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -224,7 +224,7 @@ export const PromptManager: React.FC = () => {
         {selectedGroup && (
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-              <h2 className="font-semibold text-gray-900">Version History</h2>
+              <h2 className="font-semibold text-gray-900">Historie verzí</h2>
             </div>
             <div className="divide-y divide-gray-200 max-h-96 overflow-y-auto">
               {promptGroups
@@ -234,7 +234,7 @@ export const PromptManager: React.FC = () => {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
                         <span className="font-medium text-gray-900">
-                          Version {prompt.version}
+                          Verze {prompt.version}
                         </span>
                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                           prompt.status === 'active' 
@@ -243,7 +243,7 @@ export const PromptManager: React.FC = () => {
                             ? 'bg-yellow-100 text-yellow-800'
                             : 'bg-gray-100 text-gray-800'
                         }`}>
-                          {prompt.status}
+                          {prompt.status === 'active' ? 'aktivní' : prompt.status === 'draft' ? 'návrh' : 'archivováno'}
                         </span>
                       </div>
                       <div className="flex items-center space-x-1">
@@ -257,7 +257,7 @@ export const PromptManager: React.FC = () => {
                           <button
                             onClick={() => handleActivatePrompt(prompt)}
                             className="p-1 text-gray-400 hover:text-green-600"
-                            title="Activate this version"
+                            title="Aktivovat tuto verzi"
                           >
                             <Play className="w-4 h-4" />
                           </button>
@@ -266,7 +266,7 @@ export const PromptManager: React.FC = () => {
                     </div>
                     <p className="text-sm text-gray-600 mb-2">{prompt.changelog}</p>
                     <p className="text-xs text-gray-500">
-                      Created {new Date(prompt.created_at).toLocaleDateString()}
+                      Vytvořeno {new Date(prompt.created_at).toLocaleDateString('cs-CZ')}
                     </p>
                   </div>
                 ))}
@@ -280,7 +280,7 @@ export const PromptManager: React.FC = () => {
             <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
               <div className="flex items-center justify-between">
                 <h2 className="font-semibold text-gray-900">
-                  {isCreating ? 'Create New Prompt' : `Edit ${editingPrompt?.prompt_name} v${editingPrompt?.version}`}
+                  {isCreating ? 'Vytvořit nový prompt' : `Upravit ${editingPrompt?.prompt_name} v${editingPrompt?.version}`}
                 </h2>
                 <button
                   onClick={() => {
@@ -357,14 +357,14 @@ const PromptEditor: React.FC<PromptEditorProps> = ({
       {isCreating && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Prompt Name
+            Název promptu
           </label>
           <input
             type="text"
             value={formData.prompt_name}
             onChange={(e) => setFormData(prev => ({ ...prev, prompt_name: e.target.value }))}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            placeholder="e.g., extract_review_report_data"
+            placeholder="např., extract_review_report_data"
             required
           />
         </div>
@@ -372,21 +372,21 @@ const PromptEditor: React.FC<PromptEditorProps> = ({
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Prompt Text
+          Text promptu
         </label>
         <textarea
           value={formData.prompt_text}
           onChange={(e) => setFormData(prev => ({ ...prev, prompt_text: e.target.value }))}
           rows={8}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-mono text-sm"
-          placeholder="Enter your prompt here. Use {{document_text}} as placeholder for document content."
+          placeholder="Zadejte váš prompt zde. Použijte {{document_text}} jako zástupný symbol pro obsah dokumentu."
           required
         />
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Model Parameters (JSON)
+          Parametry modelu (JSON)
         </label>
         <textarea
           value={JSON.stringify(formData.model_parameters, null, 2)}
@@ -405,28 +405,28 @@ const PromptEditor: React.FC<PromptEditorProps> = ({
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Changelog
+          Seznam změn
         </label>
         <textarea
           value={formData.changelog}
           onChange={(e) => setFormData(prev => ({ ...prev, changelog: e.target.value }))}
           rows={2}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-          placeholder="Describe what changed in this version..."
+          placeholder="Popište, co se změnilo v této verzi..."
           required
         />
       </div>
 
       {/* Test Playground */}
       <div className="border-t border-gray-200 pt-4">
-        <h3 className="text-sm font-medium text-gray-700 mb-2">Test Playground</h3>
+        <h3 className="text-sm font-medium text-gray-700 mb-2">Testovací prostředí</h3>
         <div className="space-y-2">
           <textarea
             value={testInput}
             onChange={(e) => setTestInput(e.target.value)}
             rows={3}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
-            placeholder="Enter test document text here..."
+            placeholder="Zadejte testovací text dokumentu zde..."
           />
           <div className="flex space-x-2">
             <button
@@ -435,12 +435,12 @@ const PromptEditor: React.FC<PromptEditorProps> = ({
               disabled={testing || !testInput.trim()}
               className="px-3 py-1 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
             >
-              {testing ? 'Testing...' : 'Test Prompt'}
+              {testing ? 'Testuje se...' : 'Testovat prompt'}
             </button>
           </div>
           {testOutput && (
             <div className="mt-2 p-3 bg-gray-50 rounded-lg">
-              <h4 className="text-sm font-medium text-gray-700 mb-1">Test Output:</h4>
+              <h4 className="text-sm font-medium text-gray-700 mb-1">Výstup testu:</h4>
               <pre className="text-sm text-gray-600 whitespace-pre-wrap">{testOutput}</pre>
             </div>
           )}
@@ -453,7 +453,7 @@ const PromptEditor: React.FC<PromptEditorProps> = ({
           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
         >
           <Save className="w-4 h-4 mr-2" />
-          Save Version
+          Uložit verzi
         </button>
       </div>
     </form>

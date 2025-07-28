@@ -95,7 +95,7 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({
           </button>
           
           <span className="text-sm text-gray-600 px-3">
-            Page {pageNumber} of {numPages}
+            Strana {pageNumber} z {numPages}
           </span>
           
           <button
@@ -149,7 +149,7 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({
               }
               error={
                 <div className="text-center p-8 text-red-600">
-                  Failed to load PDF. Please try again.
+                  Nepodařilo se načíst PDF. Zkuste to prosím znovu.
                 </div>
               }
             >

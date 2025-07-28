@@ -48,7 +48,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ documents }) => {
 
   const cards = [
     {
-      title: 'Total Documents',
+      title: 'Celkem dokumentů',
       value: stats.total,
       icon: FileText,
       color: 'bg-blue-500',
@@ -56,7 +56,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ documents }) => {
       textColor: 'text-blue-600'
     },
     {
-      title: 'In Queue',
+      title: 'Ve frontě',
       value: stats.queued + stats.processing,
       icon: Clock,
       color: 'bg-yellow-500',
@@ -64,7 +64,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ documents }) => {
       textColor: 'text-yellow-600'
     },
     {
-      title: 'Awaiting Review',
+      title: 'Čeká na kontrolu',
       value: stats.awaitingReview,
       icon: Users,
       color: 'bg-orange-500',
@@ -72,7 +72,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ documents }) => {
       textColor: 'text-orange-600'
     },
     {
-      title: 'Completed',
+      title: 'Dokončeno',
       value: stats.completed,
       icon: CheckCircle,
       color: 'bg-green-500',
@@ -80,7 +80,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ documents }) => {
       textColor: 'text-green-600'
     },
     {
-      title: 'Completion Rate',
+      title: 'Míra dokončení',
       value: `${stats.completionRate}%`,
       icon: TrendingUp,
       color: 'bg-indigo-500',
@@ -88,7 +88,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ documents }) => {
       textColor: 'text-indigo-600'
     },
     {
-      title: 'Avg. Processing Time',
+      title: 'Průměrný čas zpracování',
       value: `${stats.avgProcessingTime}m`,
       icon: Clock,
       color: 'bg-purple-500',

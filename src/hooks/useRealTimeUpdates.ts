@@ -32,19 +32,19 @@ export const useRealTimeUpdates = (userId?: string) => {
           
           switch (newStatus) {
             case 'processing':
-              toast.loading(`Processing ${filename}...`, { id: payload.new.id });
+              toast.loading(`Zpracovává se ${filename}...`, { id: payload.new.id });
               break;
             case 'awaiting_review':
               toast.dismiss(payload.new.id);
-              toast.success(`${filename} is ready for review`);
+              toast.success(`${filename} je připraven ke kontrole`);
               break;
             case 'completed':
               toast.dismiss(payload.new.id);
-              toast.success(`${filename} processing completed`);
+              toast.success(`Zpracování ${filename} dokončeno`);
               break;
             case 'failed':
               toast.dismiss(payload.new.id);
-              toast.error(`Failed to process ${filename}`);
+              toast.error(`Nepodařilo se zpracovat ${filename}`);
               break;
           }
         }

@@ -55,17 +55,17 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
   const getStatusText = (status: Document['status']) => {
     switch (status) {
       case 'queued':
-        return 'Queued';
+        return 'Ve frontě';
       case 'processing':
-        return 'Processing';
+        return 'Zpracovává se';
       case 'awaiting_review':
-        return 'Awaiting Review';
+        return 'Čeká na kontrolu';
       case 'completed':
-        return 'Completed';
+        return 'Dokončeno';
       case 'failed':
-        return 'Failed';
+        return 'Selhalo';
       default:
-        return 'Unknown';
+        return 'Neznámé';
     }
   };
 
@@ -93,7 +93,7 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
       {/* Header with filters */}
       <div className="px-6 py-4 border-b border-gray-200">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-          <h3 className="text-lg font-semibold text-gray-900">Documents</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Dokumenty</h3>
           
           <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
             {/* Search */}
@@ -101,7 +101,7 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search documents..."
+                placeholder="Hledat dokumenty..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -114,12 +114,12 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             >
-              <option value="all">All Status</option>
-              <option value="queued">Queued</option>
-              <option value="processing">Processing</option>
-              <option value="awaiting_review">Awaiting Review</option>
-              <option value="completed">Completed</option>
-              <option value="failed">Failed</option>
+              <option value="all">Všechny stavy</option>
+              <option value="queued">Ve frontě</option>
+              <option value="processing">Zpracovává se</option>
+              <option value="awaiting_review">Čeká na kontrolu</option>
+              <option value="completed">Dokončeno</option>
+              <option value="failed">Selhalo</option>
             </select>
 
             {/* Type Filter */}
@@ -129,7 +129,7 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                 onChange={(e) => setTypeFilter(e.target.value)}
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               >
-                <option value="all">All Types</option>
+                <option value="all">Všechny typy</option>
                 {uniqueTypes.map(type => (
                   <option key={type} value={type}>{type}</option>
                 ))}
@@ -145,19 +145,19 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Document
+                Dokument
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Type
+                Typ
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
+                Stav
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Uploaded
+                Nahráno
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
+                Akce
               </th>
             </tr>
           </thead>
@@ -205,7 +205,7 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                     className="text-indigo-600 hover:text-indigo-900 flex items-center"
                   >
                     <Eye className="w-4 h-4 mr-1" />
-                    View
+                    Zobrazit
                   </button>
                 </td>
               </tr>
@@ -217,11 +217,11 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
       {filteredDocuments.length === 0 && (
         <div className="px-6 py-12 text-center">
           <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No documents found</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Žádné dokumenty nenalezeny</h3>
           <p className="text-gray-500">
             {searchTerm || statusFilter !== 'all' || typeFilter !== 'all'
-              ? 'Try adjusting your filters or search terms'
-              : 'Upload your first document to get started'
+              ? 'Zkuste upravit filtry nebo vyhledávací výrazy'
+              : 'Nahrajte svůj první dokument pro začátek'
             }
           </p>
         </div>

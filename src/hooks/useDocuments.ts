@@ -50,7 +50,7 @@ export const useDocuments = (userId?: string) => {
           results.push(document);
         } catch (error) {
           console.error(`Failed to upload ${file.name}:`, error);
-          toast.error(`Failed to upload ${file.name}`);
+          toast.error(`Nepodařilo se nahrát ${file.name}`);
         }
       }
       
@@ -58,11 +58,11 @@ export const useDocuments = (userId?: string) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['documents'] });
-      toast.success('Documents uploaded successfully');
+      toast.success('Dokumenty úspěšně nahrány');
     },
     onError: (error) => {
       console.error('Upload error:', error);
-      toast.error('Failed to upload documents');
+      toast.error('Nepodařilo se nahrát dokumenty');
     }
   });
 

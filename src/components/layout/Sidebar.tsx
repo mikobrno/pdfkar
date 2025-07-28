@@ -20,12 +20,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) =
   const { user, signOut } = useAuth();
 
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: Home },
-    { id: 'upload', label: 'Upload', icon: Upload },
-    { id: 'documents', label: 'Documents', icon: FileText },
-    { id: 'review', label: 'Review Queue', icon: Users },
-    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-    { id: 'admin', label: 'Admin', icon: Settings }
+    { id: 'dashboard', label: 'Přehled', icon: Home },
+    { id: 'upload', label: 'Nahrát', icon: Upload },
+    { id: 'documents', label: 'Dokumenty', icon: FileText },
+    { id: 'review', label: 'Fronta kontrol', icon: Users },
+    { id: 'analytics', label: 'Analytika', icon: BarChart3 },
+    { id: 'admin', label: 'Správa', icon: Settings }
   ];
 
   const handleSignOut = async () => {
@@ -42,7 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) =
           </div>
           <div>
             <h1 className="text-lg font-bold text-gray-900">DocuMind</h1>
-            <p className="text-sm text-gray-500">AI Document Processing</p>
+            <p className="text-sm text-gray-500">AI zpracování dokumentů</p>
           </div>
         </div>
       </div>
@@ -79,7 +79,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) =
               {user?.email}
             </p>
             <p className="text-xs text-gray-500">
-              {user?.user_metadata?.role || 'User'}
+              {user?.user_metadata?.role === 'admin' ? 'Správce' : user?.user_metadata?.role === 'reviewer' ? 'Kontrolor' : 'Uživatel'}
             </p>
           </div>
         </div>
@@ -88,7 +88,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) =
           className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
         >
           <LogOut className="w-4 h-4" />
-          <span>Sign Out</span>
+          <span>Odhlásit se</span>
         </button>
       </div>
     </div>

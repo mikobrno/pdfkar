@@ -43,12 +43,12 @@ export const AuthForm: React.FC = () => {
             )}
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            {isLogin ? 'Welcome Back' : 'Create Account'}
+            {isLogin ? 'Vítejte zpět' : 'Vytvořit účet'}
           </h1>
           <p className="text-gray-600">
             {isLogin 
-              ? 'Sign in to access your document processing dashboard'
-              : 'Join us to start processing your documents intelligently'
+              ? 'Přihlaste se pro přístup k vašemu panelu pro zpracování dokumentů'
+              : 'Připojte se k nám a začněte inteligentně zpracovávat své dokumenty'
             }
           </p>
         </div>
@@ -56,7 +56,7 @@ export const AuthForm: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address
+              E-mailová adresa
             </label>
             <input
               id="email"
@@ -65,13 +65,13 @@ export const AuthForm: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
-              placeholder="Enter your email"
+              placeholder="Zadejte váš e-mail"
             />
           </div>
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-              Password
+              Heslo
             </label>
             <input
               id="password"
@@ -81,7 +81,7 @@ export const AuthForm: React.FC = () => {
               required
               minLength={6}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
-              placeholder="Enter your password"
+              placeholder="Zadejte vaše heslo"
             />
           </div>
 
@@ -95,7 +95,7 @@ export const AuthForm: React.FC = () => {
             ) : (
               <>
                 {isLogin ? <LogIn className="w-5 h-5 mr-2" /> : <UserPlus className="w-5 h-5 mr-2" />}
-                {isLogin ? 'Sign In' : 'Create Account'}
+                {isLogin ? 'Přihlásit se' : 'Vytvořit účet'}
               </>
             )}
           </button>
@@ -107,8 +107,8 @@ export const AuthForm: React.FC = () => {
             className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors"
           >
             {isLogin 
-              ? "Don't have an account? Sign up"
-              : "Already have an account? Sign in"
+              ? "Nemáte účet? Zaregistrujte se"
+              : "Již máte účet? Přihlaste se"
             }
           </button>
         </div>

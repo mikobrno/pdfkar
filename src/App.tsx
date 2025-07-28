@@ -89,9 +89,9 @@ function AppContent() {
           {currentView === 'dashboard' && (
             <div className="space-y-6">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">Dashboard</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Přehled</h1>
                 <p className="text-gray-600">
-                  Welcome back! Here's an overview of your document processing activity.
+                  Vítejte zpět! Zde je přehled vaší aktivity zpracování dokumentů.
                 </p>
               </div>
               
@@ -106,22 +106,22 @@ function AppContent() {
                 </div>
                 <div className="space-y-6">
                   <div className="bg-white rounded-xl border border-gray-200 p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Rychlé akce</h3>
                     <div className="space-y-3">
                       <button
                         onClick={() => setCurrentView('upload')}
                         className="w-full text-left px-4 py-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors"
                       >
-                        <div className="font-medium text-indigo-900">Upload Documents</div>
-                        <div className="text-sm text-indigo-600">Add new files for processing</div>
+                        <div className="font-medium text-indigo-900">Nahrát dokumenty</div>
+                        <div className="text-sm text-indigo-600">Přidat nové soubory ke zpracování</div>
                       </button>
                       <button
                         onClick={() => setCurrentView('review')}
                         className="w-full text-left px-4 py-3 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors"
                       >
-                        <div className="font-medium text-orange-900">Review Queue</div>
+                        <div className="font-medium text-orange-900">Fronta kontrol</div>
                         <div className="text-sm text-orange-600">
-                          {documents.filter(d => d.status === 'awaiting_review').length} documents waiting
+                          {documents.filter(d => d.status === 'awaiting_review').length} dokumentů čeká
                         </div>
                       </button>
                     </div>
@@ -134,9 +134,9 @@ function AppContent() {
           {currentView === 'upload' && (
             <div className="space-y-6">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">Upload Documents</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Nahrát dokumenty</h1>
                 <p className="text-gray-600">
-                  Upload PDF documents for intelligent processing and data extraction.
+                  Nahrajte PDF dokumenty pro inteligentní zpracování a extrakci dat.
                 </p>
               </div>
               <FileUpload />
@@ -146,9 +146,9 @@ function AppContent() {
           {currentView === 'documents' && (
             <div className="space-y-6">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">All Documents</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Všechny dokumenty</h1>
                 <p className="text-gray-600">
-                  Manage and view all your processed documents.
+                  Spravujte a prohlížejte všechny vaše zpracované dokumenty.
                 </p>
               </div>
               <DocumentsTable documents={documents} onViewDocument={handleViewDocument} />
@@ -158,9 +158,9 @@ function AppContent() {
           {currentView === 'review' && (
             <div className="space-y-6">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">Review Queue</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Fronta kontrol</h1>
                 <p className="text-gray-600">
-                  Documents awaiting human review and validation.
+                  Dokumenty čekající na lidskou kontrolu a validaci.
                 </p>
               </div>
               <DocumentsTable 
@@ -173,9 +173,9 @@ function AppContent() {
           {currentView === 'analytics' && (
             <div className="space-y-6">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">Analytics</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Analytika</h1>
                 <p className="text-gray-600">
-                  Insights and metrics about your document processing performance.
+                  Poznatky a metriky o výkonu zpracování vašich dokumentů.
                 </p>
               </div>
               <AnalyticsDashboard documents={documents} />
@@ -185,9 +185,9 @@ function AppContent() {
           {currentView === 'admin' && (
             <div className="space-y-6">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">Administration</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Správa</h1>
                 <p className="text-gray-600">
-                  Manage system settings, prompts, and configurations.
+                  Spravujte nastavení systému, prompty a konfigurace.
                 </p>
               </div>
               <PromptManager />

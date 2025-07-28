@@ -108,7 +108,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ document
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Processed</p>
+              <p className="text-sm font-medium text-gray-600">Celkem zpracováno</p>
               <p className="text-2xl font-bold text-gray-900">{processedData.totalProcessed}</p>
             </div>
             <div className="bg-blue-100 p-3 rounded-lg">
@@ -120,7 +120,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ document
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Success Rate</p>
+              <p className="text-sm font-medium text-gray-600">Míra úspěšnosti</p>
               <p className="text-2xl font-bold text-gray-900">{processedData.successRate}%</p>
             </div>
             <div className="bg-green-100 p-3 rounded-lg">
@@ -132,7 +132,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ document
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Avg. Processing Time</p>
+              <p className="text-sm font-medium text-gray-600">Průměrný čas zpracování</p>
               <p className="text-2xl font-bold text-gray-900">{processedData.avgProcessingTime}m</p>
             </div>
             <div className="bg-purple-100 p-3 rounded-lg">
@@ -144,7 +144,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ document
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Document Types</p>
+              <p className="text-sm font-medium text-gray-600">Typy dokumentů</p>
               <p className="text-2xl font-bold text-gray-900">{processedData.typeChartData.length}</p>
             </div>
             <div className="bg-indigo-100 p-3 rounded-lg">
@@ -158,23 +158,23 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ document
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Daily Volume Chart */}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Daily Processing Volume</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Denní objem zpracování</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={processedData.dailyVolume}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="uploaded" fill="#3b82f6" name="Uploaded" />
-              <Bar dataKey="completed" fill="#10b981" name="Completed" />
-              <Bar dataKey="failed" fill="#ef4444" name="Failed" />
+              <Bar dataKey="uploaded" fill="#3b82f6" name="Nahráno" />
+              <Bar dataKey="completed" fill="#10b981" name="Dokončeno" />
+              <Bar dataKey="failed" fill="#ef4444" name="Selhalo" />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         {/* Status Distribution */}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Status Distribution</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Rozložení stavů</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -199,7 +199,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ document
         {/* Document Types */}
         {processedData.typeChartData.length > 0 && (
           <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Document Types</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Typy dokumentů</h3>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
@@ -224,7 +224,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ document
 
         {/* Processing Trend */}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Processing Trend</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Trend zpracování</h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={processedData.dailyVolume}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -236,14 +236,14 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ document
                 dataKey="completed" 
                 stroke="#10b981" 
                 strokeWidth={2}
-                name="Completed"
+                name="Dokončeno"
               />
               <Line 
                 type="monotone" 
                 dataKey="uploaded" 
                 stroke="#3b82f6" 
                 strokeWidth={2}
-                name="Uploaded"
+                name="Nahráno"
               />
             </LineChart>
           </ResponsiveContainer>
